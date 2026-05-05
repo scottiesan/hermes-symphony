@@ -16,20 +16,25 @@ Paste this full prompt into Hermes TUI:
 Install the Hermes Symphony skill from GitHub:
 https://github.com/scottiesan/hermes-symphony
 
-Steps:
-1. Clone the repo into a temporary directory.
-2. Run: python scripts/install_hermes_skill.py --overwrite
-3. Verify this file exists: ~/.hermes/skills/hermes-symphony/SKILL.md
-4. Verify this runtime exists: ~/.hermes/skills/hermes-symphony/runtime/hermes_symphony.py
-5. Report the installed path and tell me to restart Hermes so the skill is loaded.
+Use the native Hermes skills installer if available:
+hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
+
+If that command is unavailable, clone the repo into a temporary directory and run:
+python scripts/install_hermes_skill.py --overwrite
+
+Verify:
+- $HERMES_HOME/skills/hermes-symphony/SKILL.md exists, or ~/.hermes/skills/hermes-symphony/SKILL.md if HERMES_HOME is unset.
+- The installed skill has runtime/hermes_symphony.py.
+
+Report the installed path and tell me to restart Hermes or run /reload-skills.
 ```
 
 Expected agent behavior:
 
-1. Clone `https://github.com/scottiesan/hermes-symphony`.
-2. Run `python scripts/install_hermes_skill.py --overwrite`.
-3. Verify `~/.hermes/skills/hermes-symphony/SKILL.md`.
-4. Tell you to restart Hermes so the skill is loaded.
+1. Prefer Hermes Agent's native Skills Hub install command.
+2. Fall back to cloning and running the bundled installer.
+3. Verify the installed `SKILL.md` and bundled runtime.
+4. Tell you to restart Hermes or run `/reload-skills`.
 
 ## Recommended Agent Instructions
 
@@ -50,7 +55,7 @@ python scripts/install_hermes_skill.py --overwrite
 Default destination:
 
 ```text
-~/.hermes/skills/hermes-symphony
+${HERMES_HOME:-~/.hermes}/skills/hermes-symphony
 ```
 
 Install into a Hermes profile:

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import shutil
 from datetime import datetime
@@ -12,6 +13,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_SKILL = REPO_ROOT / ".hermes" / "skills" / "hermes-symphony"
+
+
+def hermes_home() -> Path:
+    return Path(os.environ.get("HERMES_HOME", Path.home() / ".hermes")).expanduser().resolve()
 
 
 def read_frontmatter(skill_file: Path) -> dict[str, str]:
@@ -47,7 +52,7 @@ def resolve_destination(args: argparse.Namespace, skill_name: str) -> Path:
             / category
             / skill_name
         ).resolve()
-    return (Path.home() / ".hermes" / "skills" / skill_name).resolve()
+    return (hermes_home() / "skills" / skill_name).resolve()
 
 
 def install(source: Path, dest: Path, overwrite: bool, dry_run: bool) -> tuple[Path, Path | None]:

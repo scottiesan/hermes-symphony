@@ -51,3 +51,22 @@ def test_install_hermes_skill_dry_run(tmp_path: Path):
 
     assert "dry-run:" in result.stdout
     assert not (dest_dir / "hermes-symphony").exists()
+
+
+def test_install_hermes_skill_respects_hermes_home(tmp_path: Path):
+    hermes_home = tmp_path / "hermes-home"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "install_hermes_skill.py"),
+        ],
+        env={**__import__("os").environ, "HERMES_HOME": str(hermes_home)},
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    installed = hermes_home / "skills" / "hermes-symphony"
+
+    assert "installed:" in result.stdout
+    assert (installed / "SKILL.md").exists()
+    assert (installed / "runtime" / "hermes_symphony.py").exists()
