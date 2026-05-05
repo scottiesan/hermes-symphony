@@ -1,0 +1,24 @@
+task_id: example-task
+title: Example Hermes Symphony task
+repo_path: .
+goal: Describe the feature or fix to implement.
+background: Provide repo context, constraints, and relevant links.
+acceptance_criteria:
+  - The requested behavior is implemented.
+  - The verify command passes.
+allowed_scope:
+  - .
+forbidden_paths:
+  - .env
+  - secrets/
+forbidden_patterns:
+  - LIVE_TRADING=true
+verify_command: pytest -q
+guard_command: ""
+worker_type: codex
+worker_command: codex exec --ask-for-approval never --sandbox workspace-write {prompt_file}
+max_attempts: 1
+current_attempt: 0
+status: new
+created_at: "2026-05-05T00:00:00+00:00"
+updated_at: "2026-05-05T00:00:00+00:00"

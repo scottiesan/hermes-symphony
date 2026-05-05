@@ -1,0 +1,33 @@
+task_id: trading-harness-resolver
+title: Improve BTC 5m paper trading resolver reliability
+repo_path: .
+goal: Improve BTC 5m paper trading resolver reliability without enabling live execution.
+background: This task is limited to paper-trading harness reliability and must not alter secrets, credentials, wallets, or live execution settings.
+acceptance_criteria:
+  - Paper resolver behavior is more robust.
+  - No live trading or broker execution path is enabled.
+  - Trading safety validation passes.
+allowed_scope:
+  - .
+forbidden_paths:
+  - .env
+  - secrets/
+  - wallets/
+forbidden_patterns:
+  - EXECUTION_ENABLED=true
+  - LIVE_TRADING=true
+  - place_order(
+  - submit_order(
+  - send_order(
+  - real_money
+  - private_key
+verify_command: python -m pytest -q
+guard_command: ""
+worker_type: codex
+worker_command: codex exec --ask-for-approval never --sandbox workspace-write {prompt_file}
+max_attempts: 1
+current_attempt: 0
+status: new
+safety_profile: trading
+created_at: "2026-05-05T00:00:00+00:00"
+updated_at: "2026-05-05T00:00:00+00:00"

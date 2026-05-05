@@ -1,0 +1,25 @@
+task_id: build-dashboard-app
+title: Build a small local dashboard app
+repo_path: .
+goal: Build a small local dashboard app that demonstrates a usable first screen and local validation.
+background: Hermes is using Symphony to ask Codex to implement an app feature in an isolated workspace.
+acceptance_criteria:
+  - Dashboard source files are created or updated.
+  - A local verification command passes.
+  - Proof of work is generated for Hermes review.
+allowed_scope:
+  - .
+forbidden_paths:
+  - .env
+  - secrets/
+forbidden_patterns:
+  - private_key
+verify_command: python -m pytest -q
+guard_command: ""
+worker_type: codex
+worker_command: codex exec --ask-for-approval never --sandbox workspace-write {prompt_file}
+max_attempts: 1
+current_attempt: 0
+status: new
+created_at: "2026-05-05T00:00:00+00:00"
+updated_at: "2026-05-05T00:00:00+00:00"
