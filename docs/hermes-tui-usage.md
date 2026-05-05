@@ -1,42 +1,40 @@
 # Hermes TUI Usage
 
-## Install From GitHub Prompt
+## Install From GitHub
 
-Paste this full prompt into Hermes TUI:
+Paste this direct slash command into Hermes TUI:
 
 ```text
-Install the Hermes Symphony skill from GitHub:
-https://github.com/scottiesan/hermes-symphony
-
-Use the native Hermes skills installer if available:
-hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
-
-If that command is unavailable, clone the repo into a temporary directory and run:
-python scripts/install_hermes_skill.py --overwrite
-
-Verify:
-- $HERMES_HOME/skills/hermes-symphony/SKILL.md exists, or ~/.hermes/skills/hermes-symphony/SKILL.md if HERMES_HOME is unset.
-- The installed skill has runtime/hermes_symphony.py.
-
-Report the installed path and tell me to restart Hermes or run /reload-skills.
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
 ```
 
-The native install command is for `nousresearch/hermes-agent` Skills Hub. The fallback installer
-uses `HERMES_HOME` when set, matching Hermes profiles.
+To update an existing install:
 
-Manual fallback:
+```text
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+```
+
+Natural-language prompt version:
+
+```text
+Install the Hermes Symphony skill using Hermes Skills Hub.
+Run:
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
+
+If it is already installed, run:
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+
+Then verify the skill appears in /skills list and tell me whether I need to restart Hermes or run /reload-skills.
+```
+
+CLI equivalent outside TUI:
 
 ```bash
-python scripts/install_hermes_skill.py --overwrite
+hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
 ```
 
-and verify:
-
-```text
-~/.hermes/skills/hermes-symphony/SKILL.md
-```
-
-Restart Hermes after installation so the skill is loaded.
+The identifier is the GitHub repo plus the skill directory path. Hermes Agent’s Skills Hub fetches
+the bundle, scans it, and installs it under the active Hermes home.
 
 ## Create A Normal Codex Task
 

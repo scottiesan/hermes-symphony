@@ -8,43 +8,44 @@ https://github.com/scottiesan/hermes-symphony
 
 Then ask it to install the `hermes-symphony` skill.
 
-## Hermes TUI Install Prompt
+## Hermes TUI Install Command
 
-Paste this full prompt into Hermes TUI:
+Paste this command into Hermes TUI:
 
 ```text
-Install the Hermes Symphony skill from GitHub:
-https://github.com/scottiesan/hermes-symphony
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
+```
 
-Use the native Hermes skills installer if available:
+If it is already installed and you want to update it:
+
+```text
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+```
+
+## Hermes TUI Natural-Language Prompt
+
+```text
+Install the Hermes Symphony skill using Hermes Skills Hub.
+Run:
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
+
+If it is already installed, run:
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+
+Then verify the skill appears in /skills list and tell me whether I need to restart Hermes or run /reload-skills.
+```
+
+## CLI Equivalent
+
+Outside TUI:
+
+```bash
 hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
-
-If that command is unavailable, clone the repo into a temporary directory and run:
-python scripts/install_hermes_skill.py --overwrite
-
-Verify:
-- $HERMES_HOME/skills/hermes-symphony/SKILL.md exists, or ~/.hermes/skills/hermes-symphony/SKILL.md if HERMES_HOME is unset.
-- The installed skill has runtime/hermes_symphony.py.
-
-Report the installed path and tell me to restart Hermes or run /reload-skills.
 ```
 
-Expected agent behavior:
+## Fallback Manual Install
 
-1. Prefer Hermes Agent's native Skills Hub install command.
-2. Fall back to cloning and running the bundled installer.
-3. Verify the installed `SKILL.md` and bundled runtime.
-4. Tell you to restart Hermes or run `/reload-skills`.
-
-## Recommended Agent Instructions
-
-```text
-Install the Hermes Symphony skill from https://github.com/scottiesan/hermes-symphony.
-Clone the repo, run `python scripts/install_hermes_skill.py --overwrite`, then verify
-`~/.hermes/skills/hermes-symphony/SKILL.md` exists.
-```
-
-## Manual Install
+Use this only if Hermes Skills Hub is unavailable:
 
 ```bash
 git clone https://github.com/scottiesan/hermes-symphony
@@ -52,7 +53,7 @@ cd hermes-symphony
 python scripts/install_hermes_skill.py --overwrite
 ```
 
-Default destination:
+Fallback installer default destination:
 
 ```text
 ${HERMES_HOME:-~/.hermes}/skills/hermes-symphony

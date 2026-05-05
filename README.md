@@ -12,44 +12,35 @@ Production release target: `0.2.0`.
 python -m pip install -e ".[dev]"
 ```
 
-## Install The Hermes Skill From GitHub
+## Install The Hermes Skill In Hermes TUI
 
-In Hermes TUI, paste this full prompt:
-
-```text
-Install the Hermes Symphony skill from GitHub:
-https://github.com/scottiesan/hermes-symphony
-
-Use the native Hermes skills installer if available:
-hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
-
-If that command is unavailable, clone the repo into a temporary directory and run:
-python scripts/install_hermes_skill.py --overwrite
-
-Verify:
-- $HERMES_HOME/skills/hermes-symphony/SKILL.md exists, or ~/.hermes/skills/hermes-symphony/SKILL.md if HERMES_HOME is unset.
-- The installed skill has runtime/hermes_symphony.py.
-
-Report the installed path and tell me to restart Hermes or run /reload-skills.
-```
-
-Short form, if the agent already understands skill installation:
+Use this direct Hermes TUI slash command:
 
 ```text
-Install the skill from https://github.com/scottiesan/hermes-symphony using its installer script.
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
 ```
 
-Manual equivalent:
+If you want to give Hermes Agent a natural-language prompt instead of a slash command, use:
+
+```text
+Install the Hermes Symphony skill using Hermes Skills Hub.
+Run:
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
+
+If it is already installed, run:
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+
+Then verify the skill appears in /skills list and tell me whether I need to restart Hermes or run /reload-skills.
+```
+
+CLI equivalent outside TUI:
 
 ```bash
-git clone https://github.com/scottiesan/hermes-symphony
-cd hermes-symphony
-python scripts/install_hermes_skill.py --overwrite
+hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
 ```
 
-This installs the full skill bundle to `~/.hermes/skills/hermes-symphony`, including the bundled
-runtime at `runtime/hermes_symphony.py`. See [INSTALL.md](INSTALL.md) and
-[docs/hermes-tui-usage.md](docs/hermes-tui-usage.md).
+This installs the full skill bundle through Hermes Agent’s native Skills Hub. See
+[INSTALL.md](INSTALL.md) and [docs/hermes-tui-usage.md](docs/hermes-tui-usage.md).
 
 ## Sample Hermes TUI Usage
 

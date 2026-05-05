@@ -9,34 +9,23 @@ Use this skill when Hermes needs to orchestrate app or feature work through isol
 
 ## Install From GitHub In Hermes TUI
 
-Users should paste this full prompt:
+Users should paste this direct Hermes TUI command:
 
 ```text
-Install the Hermes Symphony skill from GitHub:
-https://github.com/scottiesan/hermes-symphony
-
-Use the native Hermes skills installer if available:
-hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
-
-If that command is unavailable, clone the repo into a temporary directory and run:
-python scripts/install_hermes_skill.py --overwrite
-
-Verify:
-- $HERMES_HOME/skills/hermes-symphony/SKILL.md exists, or ~/.hermes/skills/hermes-symphony/SKILL.md if HERMES_HOME is unset.
-- The installed skill has runtime/hermes_symphony.py.
-
-Report the installed path and tell me to restart Hermes or run /reload-skills.
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
 ```
 
-Expected install flow:
+To update an existing install:
+
+```text
+/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+```
+
+CLI equivalent outside TUI:
 
 ```bash
-git clone https://github.com/scottiesan/hermes-symphony
-cd hermes-symphony
-python scripts/install_hermes_skill.py --overwrite
+hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
 ```
-
-Then verify `~/.hermes/skills/hermes-symphony/SKILL.md` and ask the user to restart Hermes.
 
 ## Runtime
 
