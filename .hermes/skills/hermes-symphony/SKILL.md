@@ -7,6 +7,32 @@ description: "Install and operate the Hermes Symphony orchestration runtime for 
 
 Use this skill when Hermes needs to orchestrate app or feature work through isolated Codex workers.
 
+## Install From GitHub In Hermes TUI
+
+Users should paste this full prompt:
+
+```text
+Install the Hermes Symphony skill from GitHub:
+https://github.com/scottiesan/hermes-symphony
+
+Steps:
+1. Clone the repo into a temporary directory.
+2. Run: python scripts/install_hermes_skill.py --overwrite
+3. Verify this file exists: ~/.hermes/skills/hermes-symphony/SKILL.md
+4. Verify this runtime exists: ~/.hermes/skills/hermes-symphony/runtime/hermes_symphony.py
+5. Report the installed path and tell me to restart Hermes so the skill is loaded.
+```
+
+Expected install flow:
+
+```bash
+git clone https://github.com/scottiesan/hermes-symphony
+cd hermes-symphony
+python scripts/install_hermes_skill.py --overwrite
+```
+
+Then verify `~/.hermes/skills/hermes-symphony/SKILL.md` and ask the user to restart Hermes.
+
 ## Runtime
 
 When installed from GitHub, this skill includes a bundled runtime at:
@@ -73,4 +99,26 @@ python runtime/hermes_symphony.py status
 python runtime/hermes_symphony.py validate --task-id TASK_ID
 python runtime/hermes_symphony.py report --task-id TASK_ID
 python runtime/hermes_symphony.py daemon --once --mock-worker
+```
+
+## Sample Hermes Prompts
+
+```text
+Use hermes-symphony to create and enqueue a codex_once task for this repo.
+Goal: add a small local dashboard app.
+Allowed scope: .
+Verify command: pytest -q.
+Guard command: python -m compileall .
+```
+
+```text
+Use hermes-symphony to create and enqueue a codex_autoresearch task.
+Goal: reduce failing pytest tests.
+Metric command: pytest -q.
+Metric parser: failing_tests.
+Metric direction: lower.
+Metric target: 0.
+Allowed scope: src/, tests/.
+Verify command: pytest -q.
+Guard command: python -m compileall .
 ```

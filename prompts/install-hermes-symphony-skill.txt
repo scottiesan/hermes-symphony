@@ -1,0 +1,9 @@
+Install the Hermes Symphony skill from GitHub:
+https://github.com/scottiesan/hermes-symphony
+
+Steps:
+1. Clone the repo into a temporary directory.
+2. Run: python scripts/install_hermes_skill.py --overwrite
+3. Verify this file exists: ~/.hermes/skills/hermes-symphony/SKILL.md
+4. Verify this runtime exists: ~/.hermes/skills/hermes-symphony/runtime/hermes_symphony.py
+5. Report the installed path and tell me to restart Hermes so the skill is loaded.

@@ -14,20 +14,56 @@ python -m pip install -e ".[dev]"
 
 ## Install The Hermes Skill From GitHub
 
-Give a Hermes agent this URL:
+In Hermes TUI, paste this full prompt:
 
 ```text
+Install the Hermes Symphony skill from GitHub:
 https://github.com/scottiesan/hermes-symphony
+
+Steps:
+1. Clone the repo into a temporary directory.
+2. Run: python scripts/install_hermes_skill.py --overwrite
+3. Verify this file exists: ~/.hermes/skills/hermes-symphony/SKILL.md
+4. Verify this runtime exists: ~/.hermes/skills/hermes-symphony/runtime/hermes_symphony.py
+5. Report the installed path and tell me to restart Hermes so the skill is loaded.
 ```
 
-Ask it to clone the repo and run:
+Short form, if the agent already understands skill installation:
+
+```text
+Install the skill from https://github.com/scottiesan/hermes-symphony using its installer script.
+```
+
+Manual equivalent:
 
 ```bash
+git clone https://github.com/scottiesan/hermes-symphony
+cd hermes-symphony
 python scripts/install_hermes_skill.py --overwrite
 ```
 
 This installs the full skill bundle to `~/.hermes/skills/hermes-symphony`, including the bundled
-runtime at `runtime/hermes_symphony.py`. See [INSTALL.md](INSTALL.md).
+runtime at `runtime/hermes_symphony.py`. See [INSTALL.md](INSTALL.md) and
+[docs/hermes-tui-usage.md](docs/hermes-tui-usage.md).
+
+## Sample Hermes TUI Usage
+
+After restarting Hermes, try:
+
+```text
+Use hermes-symphony to create a task for this repo that runs in codex_once mode.
+Goal: add a small health check endpoint.
+Allowed scope: src/, tests/.
+Verify command: pytest -q.
+Guard command: python -m compileall .
+Enqueue it and show me the task id.
+```
+
+Then:
+
+```text
+Use hermes-symphony to run TASK_ID, validate it, and summarize proof_of_work.md.
+```
 
 ## Quickstart
 
