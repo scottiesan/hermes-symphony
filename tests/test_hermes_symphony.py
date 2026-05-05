@@ -12,6 +12,7 @@ from hermes_symphony import (  # noqa: E402
     Snapshot,
     TaskContract,
     Validator,
+    WorkerDispatcher,
     dump_structured,
     main,
     now_iso,
@@ -41,6 +42,11 @@ def task_data(repo: Path, **overrides):
         "guard_command": "python -c \"print('guard')\"",
         "worker_type": "shell",
         "worker_command": "python -c \"from pathlib import Path; Path('changed.txt').write_text('changed')\"",
+        "worker": {
+            "type": "shell",
+            "command": "python -c \"from pathlib import Path; Path('changed.txt').write_text('changed')\"",
+            "timeout_seconds": 900,
+        },
         "max_attempts": 1,
         "current_attempt": 0,
         "status": "new",
@@ -186,6 +192,175 @@ def test_validation_json_shape_and_proof_generation(tmp_path: Path):
     assert "accept" in proof
 
 
+def test_codex_once_worker_prompt_and_dispatch_still_work(tmp_path: Path):
+    repo = make_repo(tmp_path)
+    task = TaskContract(
+        task_data(
+            repo,
+            worker={
+                "type": "codex_once",
+                "command": "python -c \"from pathlib import Path; Path('once.txt').write_text('once')\"",
+                "timeout_seconds": 10,
+            },
+        )
+    ).validate()
+    runtime = HermesSymphonyRuntime(tmp_path / ".symphony")
+    workspace = runtime.workspaces.prepare(task)
+
+    log = WorkerDispatcher(runtime.queue).run(task, workspace)
+    prompt = (tmp_path / ".symphony" / "tasks" / "task-1" / "worker_prompt.md").read_text()
+
+    assert log["returncode"] == 0
+    assert "codex_once" in prompt
+    assert (workspace / "once.txt").exists()
+
+
+def test_autoresearch_contract_requires_metric(tmp_path: Path):
+    repo = make_repo(tmp_path)
+    data = task_data(
+        repo,
+        worker={"type": "codex_autoresearch", "command": "codex", "timeout_seconds": 10},
+        guard_command="python -m compileall .",
+    )
+
+    with pytest.raises(ValueError, match="requires metric object"):
+        TaskContract(data).validate()
+
+
+def test_autoresearch_prompt_generation(tmp_path: Path):
+    repo = make_repo(tmp_path)
+    task = TaskContract(
+        task_data(
+            repo,
+            worker={"type": "codex_autoresearch", "command": "codex", "timeout_seconds": 10},
+            guard_command="python -m compileall .",
+            metric={
+                "name": "failing_tests",
+                "command": "python -c \"print(3)\"",
+                "parser": "numeric_stdout",
+                "direction": "lower",
+                "target": 0,
+            },
+            autoresearch={
+                "max_iterations": 2,
+                "mode": "foreground",
+                "retain_policy": "improve_only",
+                "results_dir": "autoresearch-results",
+            },
+        )
+    ).validate()
+    runtime = HermesSymphonyRuntime(tmp_path / ".symphony")
+    workspace = runtime.workspaces.prepare(task)
+
+    prompt = WorkerDispatcher(runtime.queue).build_prompt(task, workspace)
+
+    assert "$codex-autoresearch" in prompt
+    assert "Mode: exec" in prompt
+    assert "Metric parser: numeric_stdout" in prompt
+    assert "Iterations: 2" in prompt
+
+
+def test_autoresearch_mock_runs_validation_and_proof(tmp_path: Path):
+    repo = make_repo(tmp_path)
+    metric_command = "python -c \"from pathlib import Path; print(0 if Path('optimized.txt').exists() else 3)\""
+    runtime = HermesSymphonyRuntime(tmp_path / ".symphony")
+    task_file = write_task(
+        tmp_path / "task.yaml",
+        repo,
+        worker={"type": "codex_autoresearch", "command": "codex", "timeout_seconds": 30},
+        guard_command="python -m compileall .",
+        verify_command="python -c \"print('verify')\"",
+        metric={
+            "name": "failing_tests",
+            "command": metric_command,
+            "parser": "numeric_stdout",
+            "direction": "lower",
+            "target": 0,
+        },
+        autoresearch={
+            "max_iterations": 2,
+            "mode": "foreground",
+            "retain_policy": "improve_only",
+            "results_dir": "autoresearch-results",
+        },
+    )
+
+    runtime.queue.enqueue(task_file)
+    result = runtime.run_task("task-1", mock_worker=True)
+    artifact_dir = tmp_path / ".symphony" / "tasks" / "task-1"
+    metric = json.loads((artifact_dir / "metric_summary.json").read_text())
+    proof = (artifact_dir / "proof_of_work.md").read_text()
+
+    assert result["status"] == "needs_review"
+    assert metric["baseline"]["value"] == 3.0
+    assert metric["final"]["value"] == 0.0
+    assert metric["improved"] is True
+    assert (artifact_dir / "autoresearch-results" / "summary.md").exists()
+    assert "## Autoresearch Summary" in proof
+    assert "accept" in proof
+
+
+def test_autoresearch_safety_checks_apply_to_output(tmp_path: Path):
+    repo = make_repo(tmp_path)
+    metric_command = "python -c \"from pathlib import Path; print(0 if Path('optimized.txt').exists() else 3)\""
+    runtime = HermesSymphonyRuntime(tmp_path / ".symphony")
+    task_file = write_task(
+        tmp_path / "task.yaml",
+        repo,
+        worker={
+            "type": "codex_autoresearch",
+            "command": "python -c \"from pathlib import Path; Path('optimized.txt').write_text('ok'); Path('.env').write_text('API_SECRET=x')\"",
+            "timeout_seconds": 30,
+        },
+        guard_command="python -m compileall .",
+        verify_command="python -c \"print('verify')\"",
+        metric={
+            "name": "failing_tests",
+            "command": metric_command,
+            "parser": "numeric_stdout",
+            "direction": "lower",
+            "target": 0,
+        },
+        autoresearch={
+            "max_iterations": 2,
+            "mode": "foreground",
+            "retain_policy": "improve_only",
+            "results_dir": "autoresearch-results",
+        },
+    )
+
+    runtime.queue.enqueue(task_file)
+    result = runtime.run_task("task-1")
+    validation = json.loads((tmp_path / ".symphony" / "tasks" / "task-1" / "validation.json").read_text())
+
+    assert result["status"] == "failed"
+    assert ".env" in validation["checks"]["forbidden_paths"]["matches"]
+
+
+def test_codex_review_allows_empty_diff(tmp_path: Path):
+    repo = make_repo(tmp_path)
+    task = TaskContract(
+        task_data(
+            repo,
+            worker={
+                "type": "codex_review",
+                "command": "python -c \"print('review')\"",
+                "timeout_seconds": 10,
+            },
+            verify_command="",
+            guard_command="",
+        )
+    ).validate()
+    runtime = HermesSymphonyRuntime(tmp_path / ".symphony")
+    workspace = runtime.workspaces.prepare(task)
+    before = Snapshot.collect(workspace)
+
+    result = Validator(runtime.queue).validate(task, workspace, before)
+
+    assert result["status"] == "passed"
+    assert result["checks"]["empty_diff"]["passed"] is True
+
+
 def test_accept_and_reject_review_transitions(tmp_path: Path):
     repo = make_repo(tmp_path)
     runtime = HermesSymphonyRuntime(tmp_path / ".symphony")
@@ -225,8 +400,11 @@ def test_worker_timeout_becomes_failed_task(tmp_path: Path):
     task_file = write_task(
         tmp_path / "task.yaml",
         repo,
-        worker_command="python -c \"import time; time.sleep(2)\"",
-        worker_timeout_seconds=1,
+        worker={
+            "type": "shell",
+            "command": "python -c \"import time; time.sleep(2)\"",
+            "timeout_seconds": 1,
+        },
         verify_command="",
         guard_command="",
     )

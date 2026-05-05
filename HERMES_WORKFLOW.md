@@ -7,6 +7,10 @@ commands, and leave proof for Hermes review.
 Worker rules:
 
 - Treat the task contract as authoritative.
+- Use `codex_once` for ordinary app and feature implementation.
+- Use `codex_autoresearch` only for measurable optimization tasks with deterministic metrics,
+  verify commands, and guard commands.
+- Use `codex_review` for review-only tasks.
 - Do not read, write, or execute commands outside the isolated workspace.
 - Respect `allowed_scope`, `forbidden_paths`, and `forbidden_patterns`.
 - Never enable live trading or real-money execution in trading repositories.

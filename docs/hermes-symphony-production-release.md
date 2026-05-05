@@ -2,7 +2,7 @@
 
 ## Release
 
-`0.1.0` is the first production-oriented local release. It is suitable for single-host Hermes
+`0.2.0` is the production-oriented local release. It is suitable for single-host Hermes
 orchestration where Hermes supervises the review decision and Codex runs in isolated task
 workspaces.
 
@@ -15,6 +15,8 @@ workspaces.
 - Explicit `accept` and `reject` commands for Hermes review.
 - PyPI-style project metadata and console script entry point.
 - Release checklist in `RELEASE.md`.
+- Optional `codex_autoresearch` worker mode with metric gating and final Symphony validation.
+- `codex_review` worker mode for review-only tasks.
 
 ## Operator Runbook
 
@@ -45,3 +47,5 @@ python scripts/hermes_symphony.py --version
 - Worker sandboxing depends on Codex configuration and host controls.
 - Workspaces are preserved for review and must be cleaned intentionally.
 - GitHub/Linear adapters are not implemented in this release.
+- Autoresearch background runtime control is delegated to Codex Autoresearch; Symphony captures
+  results and performs final validation after worker completion.

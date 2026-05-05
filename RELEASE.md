@@ -1,4 +1,4 @@
-# Hermes Symphony 0.1.0 Release Plan
+# Hermes Symphony 0.2.0 Release Plan
 
 ## Scope
 
@@ -17,6 +17,8 @@ Included:
 - Hermes skill and examples.
 - Trading safety profile.
 - Local event log at `.symphony/logs/events.jsonl`.
+- Optional `codex_autoresearch` worker mode for measurable improve-verify loops.
+- `codex_review` worker mode for review-only tasks.
 
 Deferred:
 
@@ -39,6 +41,9 @@ Deferred:
 - Python 3.10+
 - Requires PyYAML for YAML task files.
 - Does not require Codex for tests or mocked dry runs.
+- `codex_autoresearch` tasks require the `codex-autoresearch` skill to be installed or an explicit
+  `autoresearch.skill_path`.
+- Hermes skill installation from GitHub is supported with `scripts/install_hermes_skill.py`.
 
 ## Operator Notes
 

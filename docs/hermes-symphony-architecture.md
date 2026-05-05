@@ -32,7 +32,10 @@ Hermes Agent
   -> scripts/hermes_symphony.py
   -> local task queue
   -> workspace manager
-  -> Codex worker dispatcher
+  -> worker dispatcher
+      -> codex_once
+      -> codex_autoresearch
+      -> codex_review
   -> validator
   -> proof-of-work reporter
   -> Hermes review/accept/reject/follow-up
@@ -56,6 +59,23 @@ Hermes Agent
 - Validation includes forbidden path checks, forbidden pattern checks, outside-scope checks, and
   empty-diff rejection.
 - Codex CLI is the first worker interface; app-server streaming is deferred.
+- Codex Autoresearch is an optional worker strategy for measurable improve-verify loops.
+
+## Worker Modes
+
+`codex_once` is the default worker. It generates a Symphony prompt, runs `codex exec` in the
+isolated workspace, captures logs, and then lets Symphony run validation and proof-of-work.
+
+`codex_autoresearch` is optional and only valid when the task contract includes `metric` and
+`autoresearch` blocks plus deterministic `verify_command` and `guard_command`. The dispatcher
+generates a `$codex-autoresearch` `Mode: exec` prompt and passes goal, scope, metric, guard,
+verify, iteration limit, retain policy, and safety constraints. After autoresearch exits, Symphony
+measures the metric again, archives `autoresearch-results`, runs final validation, and generates the
+normal proof-of-work. Autoresearch cannot bypass forbidden path, forbidden pattern, scope, secret,
+or trading safety checks.
+
+`codex_review` is review-only. It can inspect diffs, run tests/guards, and summarize risks. Empty
+diffs are allowed for review tasks; edits remain forbidden unless the task explicitly requests them.
 
 ## Adapter Interfaces
 
@@ -82,7 +102,7 @@ stronger subprocess containment and app-server sandbox policy enforcement.
 
 ## Production Release Notes
 
-The `0.1.0` release adds atomic writes, a local queue lock, append-only JSONL events, worker timeout
-handling, and explicit Hermes review transitions. This makes the runtime appropriate for
+The `0.2.0` release adds atomic writes, a local queue lock, append-only JSONL events, worker timeout
+handling, explicit Hermes review transitions, and optional Codex Autoresearch dispatch. This makes the runtime appropriate for
 single-host production use under a process supervisor, with Hermes retaining the final
 accept/reject decision.

@@ -15,8 +15,12 @@ forbidden_patterns:
   - LIVE_TRADING=true
 verify_command: pytest -q
 guard_command: ""
-worker_type: codex
-worker_command: codex exec --ask-for-approval never --sandbox workspace-write {prompt_file}
+worker:
+  type: codex_once
+  command: codex
+  timeout_seconds: 900
+worker_type: codex_once
+worker_command: codex
 max_attempts: 1
 current_attempt: 0
 status: new

@@ -10,7 +10,7 @@ Hermes Symphony v1 follows the SPEC's architecture but changes the integration s
 | --- | --- | --- |
 | Source of work | Linear project polling | Local YAML/JSON task queue |
 | Runtime | Elixir/OTP service | Python CLI and polling daemon |
-| Worker | Codex app-server | Codex CLI command first |
+| Worker | Codex app-server | Codex CLI command first, plus optional Codex Autoresearch |
 | Policy | `WORKFLOW.md` | `WORKFLOW.md` plus `HERMES_WORKFLOW.md` |
 | Workspace | Per-issue workspace | Per-task workspace under `.symphony/workspaces/` |
 | Handoff | Tracker/PR workflow | `proof_of_work.md` for Hermes review |
@@ -30,4 +30,6 @@ Hermes can add:
 - Linear polling by implementing `LinearTaskSource`.
 - GitHub issue polling by implementing `GitHubIssueTaskSource`.
 - Codex app-server streaming by adding a second worker dispatcher.
+- Additional optimization strategies by extending worker modes while preserving final Symphony
+  validation.
 - A richer status surface over the current `.symphony/tasks/` artifacts.
