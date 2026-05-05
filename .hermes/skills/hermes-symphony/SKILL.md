@@ -12,19 +12,13 @@ Use this skill when Hermes needs to orchestrate app or feature work through isol
 Users should paste this direct Hermes TUI command:
 
 ```text
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
-```
-
-To update an existing install:
-
-```text
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+/skills install https://github.com/scottiesan/hermes-symphony
 ```
 
 CLI equivalent outside TUI:
 
 ```bash
-hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
+hermes skills install https://github.com/scottiesan/hermes-symphony
 ```
 
 ## Runtime

@@ -13,26 +13,13 @@ Then ask it to install the `hermes-symphony` skill.
 Paste this command into Hermes TUI:
 
 ```text
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
-```
-
-If it is already installed and you want to update it:
-
-```text
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+/skills install https://github.com/scottiesan/hermes-symphony
 ```
 
 ## Hermes TUI Natural-Language Prompt
 
 ```text
-Install the Hermes Symphony skill using Hermes Skills Hub.
-Run:
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
-
-If it is already installed, run:
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
-
-Then verify the skill appears in /skills list and tell me whether I need to restart Hermes or run /reload-skills.
+Install the skill from https://github.com/scottiesan/hermes-symphony.
 ```
 
 ## CLI Equivalent
@@ -40,12 +27,12 @@ Then verify the skill appears in /skills list and tell me whether I need to rest
 Outside TUI:
 
 ```bash
-hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
+hermes skills install https://github.com/scottiesan/hermes-symphony
 ```
 
 ## Fallback Manual Install
 
-Use this only if Hermes Skills Hub is unavailable:
+Use this only if the Hermes install command is unavailable:
 
 ```bash
 git clone https://github.com/scottiesan/hermes-symphony

@@ -14,8 +14,13 @@ python -m pip install -e ".[dev]"
 
 ## Install The Hermes Skill
 
-This repo is not currently published in Hermes Skills Hub. Install it by cloning the repo and
-running the bundled installer:
+In Hermes TUI:
+
+```text
+/skills install https://github.com/scottiesan/hermes-symphony
+```
+
+Fallback manual install:
 
 ```bash
 git clone https://github.com/scottiesan/hermes-symphony

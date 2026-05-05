@@ -5,36 +5,22 @@
 Paste this direct slash command into Hermes TUI:
 
 ```text
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
-```
-
-To update an existing install:
-
-```text
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
+/skills install https://github.com/scottiesan/hermes-symphony
 ```
 
 Natural-language prompt version:
 
 ```text
-Install the Hermes Symphony skill using Hermes Skills Hub.
-Run:
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
-
-If it is already installed, run:
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
-
-Then verify the skill appears in /skills list and tell me whether I need to restart Hermes or run /reload-skills.
+Install the skill from https://github.com/scottiesan/hermes-symphony.
 ```
 
 CLI equivalent outside TUI:
 
 ```bash
-hermes skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --yes
+hermes skills install https://github.com/scottiesan/hermes-symphony
 ```
 
-The identifier is the GitHub repo plus the skill directory path. Hermes Agent’s Skills Hub fetches
-the bundle, scans it, and installs it under the active Hermes home.
+Hermes Agent installs the skill under the active Hermes home.
 
 ## Create A Normal Codex Task
 

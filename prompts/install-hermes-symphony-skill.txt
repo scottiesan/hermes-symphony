@@ -1,8 +1,1 @@
-Install the Hermes Symphony skill using Hermes Skills Hub.
-Run:
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --now
-
-If it is already installed, run:
-/skills install scottiesan/hermes-symphony/.hermes/skills/hermes-symphony --force --now
-
-Then verify the skill appears in /skills list and tell me whether I need to restart Hermes or run /reload-skills.
+Install the skill from https://github.com/scottiesan/hermes-symphony.
